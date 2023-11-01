@@ -20,8 +20,12 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
 
+      - name: Restore dependencies
+        run: dotnet restore --locked-mode
+
       - name: Build
-        run: dotnet build --locked-mode -c ${{ matrix.configuration }}
+        id: build
+        run: dotnet build --no-restore -c ${{ matrix.configuration }}
 
       - name: Publish
         uses: softprops/action-gh-release@v0.1.15

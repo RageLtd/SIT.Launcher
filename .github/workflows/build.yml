@@ -30,11 +30,11 @@ jobs:
           cache-dependency-path: "**/packages.lock.json"
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore --locked-mode
 
       - name: Build
         id: build
-        run: dotnet build --locked-mode -c ${{ matrix.configuration }}
+        run: dotnet build --no-restore -c ${{ matrix.configuration }}
 
 
       - name: Upload artifact
