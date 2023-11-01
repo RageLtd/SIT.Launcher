@@ -22,7 +22,7 @@ namespace SIT.Launcher
 
                 return instance; 
             }
-            set { instance = value; }
+            private set => instance = value;
         }
 
 
@@ -31,13 +31,13 @@ namespace SIT.Launcher
             if (instance == null)
             {
                 instance = this;
-                return;
             }
         }
 
         public ICollection<ServerInstance> ServerInstances { get; set; }
 
-        public ServerInstance ServerInstance { get; set; } = new ServerInstance() { ServerAddress = "https://127.0.0.1:443" };
+        public ServerInstance ServerInstance { get; set; } =
+            new ServerInstance() { ServerAddress = "https://127.0.0.1:443", WebsocketUrl = string.Empty };
 
         public string Username { get; set; }
 
@@ -66,7 +66,7 @@ namespace SIT.Launcher
                 AutomaticallyInstallSIT = true,
                 AutomaticallyInstallAkiSupport = true,
                 CloseLauncherAfterLaunch = false,
-                ServerInstance = new ServerInstance() { ServerAddress = "http://127.0.0.1:6969" }
+                ServerInstance = new ServerInstance() { ServerAddress = "http://127.0.0.1:6969", WebsocketUrl = string.Empty}
             };
             if(File.Exists(App.ApplicationDirectory + "LauncherConfig.json"))
                 launcherConfig = JsonConvert.DeserializeObject<LauncherConfig>(File.ReadAllText(App.ApplicationDirectory + "LauncherConfig.json"));

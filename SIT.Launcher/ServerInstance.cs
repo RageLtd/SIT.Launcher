@@ -12,5 +12,6 @@ namespace SIT.Launcher
 
         public string ServerName { get; set; } = "Local";
         public string ServerAddress { get; set; } = "http://127.0.0.1:6969";
+        public string WebsocketUrl { get; set; }
     }
 }

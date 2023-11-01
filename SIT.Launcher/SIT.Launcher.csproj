@@ -490,7 +490,7 @@
         <PackageReference Include="System.IO.Compression" Version="4.3.0"/>
     </ItemGroup>
     <ItemGroup>
-        <Reference Include="References/bsg.componentace.compression.libs.zlib.dll"></Reference>
+        <Reference Include="References/bsg.componentace.compression.libs.zlib.dll" />
     </ItemGroup>
 
     <ItemGroup>

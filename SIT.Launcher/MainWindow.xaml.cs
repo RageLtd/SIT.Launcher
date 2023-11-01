@@ -7,7 +7,6 @@ using SIT.Launcher.DeObfus;
 using SIT.Launcher.Windows;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -51,46 +50,17 @@ namespace SIT.Launcher
             _ = UpdateInstallFromOfficial();
 
             _ = DisplayLatestReleaseNews();
-
-            DisplayLatestLogs();
-        }
-
-        public static readonly DependencyProperty SITReleasesProperty = DependencyProperty.Register("SITReleases", typeof(ObservableCollection<Release>), typeof(MainWindow), new FrameworkPropertyMetadata(null));
-        public ObservableCollection<Release> SITReleases
-        {
-            get => (ObservableCollection<Release>)GetValue(SITReleasesProperty);
-            set => SetValue(SITReleasesProperty, value);
-        }
-
-        public static readonly DependencyProperty SelectedSITReleaseProperty = DependencyProperty.Register("SelectedSITRelease", typeof(Release), typeof(MainWindow), new FrameworkPropertyMetadata(null));
-        public Release SelectedSITRelease
-        {
-            get => (Release)GetValue(SelectedSITReleaseProperty);
-            set => SetValue(SelectedSITReleaseProperty, value);
-        }
-
-        private void DisplayLatestLogs()
-        {
-            var pathToLogs = Path.Combine(Directory.GetParent(OfficialGameFinder.FindOfficialGame().FullName).FullName, "Logs");
-            var filesInLogs = Directory.GetFiles(pathToLogs);
-            if (!filesInLogs.Any())
-                return;
-
-            foreach (var f in filesInLogs)
-            {
-
-            }
         }
 
         private async Task DisplayLatestReleaseNews()
         {
             var github = new GitHubClient(new ProductHeaderValue("SIT-Launcher"));
             var user = await github.User.Get("paulov-t");
-            SITReleases = new ObservableCollection<Release>(await github.Repository.Release.GetAll("paulov-t", "SIT.Core", new ApiOptions() { }));
-            SelectedSITRelease = SITReleases.OrderByDescending(x => x.CreatedAt).First();
+            var tarkovCoreReleases = await github.Repository.Release.GetAll("paulov-t", "SIT.Core", new ApiOptions() { });
+            var tarkovCoreLatestRelease = tarkovCoreReleases.OrderByDescending(x => x.CreatedAt).First();
 
-            rtbSITReleaseNews.Document = HtmlToFlowDocument(SelectedSITRelease.Body);
-            txtSITLatestReleaseTitle.Text = SelectedSITRelease.Name + " - " + SelectedSITRelease.CreatedAt.ToString();
+            rtbSITReleaseNews.Document = HtmlToFlowDocument(tarkovCoreLatestRelease.Body);
+            txtSITLatestReleaseTitle.Text = tarkovCoreLatestRelease.Name + " - " + tarkovCoreLatestRelease.CreatedAt.ToString();
 
         }
         public static FlowDocument HtmlToFlowDocument(string text)
@@ -188,13 +158,9 @@ namespace SIT.Launcher
             var officialFiles = Directory
                                         .GetFiles(fiOfficialGame.DirectoryName, "*", new EnumerationOptions() { RecurseSubdirectories = true })
                                         .Select(x => new FileInfo(x));
-
-            var countOfOfficialFiles = officialFiles.Count();
-            var currentNumber = 1;
             foreach (var file in officialFiles)
             {
-                var percent = (int)Math.Round((decimal)(currentNumber / countOfOfficialFiles) * 100);
-                await loadingDialog.UpdateAsync("Installing", $"Copying file: {file.Name}", percent);
+                await loadingDialog.UpdateAsync("Installing", $"Copying file: {file.Name}");
                 var newFilePath = file.FullName.Replace(fiOfficialGame.DirectoryName, offlineFolder);
                 Directory.CreateDirectory(Directory.GetParent(newFilePath).FullName);
 
@@ -204,8 +170,6 @@ namespace SIT.Launcher
 
                 if (newFilePath.Contains("EscapeFromTarkov.exe"))
                     exeLocation = newFilePath;
-
-                currentNumber++;
             }
 
             Config.InstallLocation = offlineFolder + "\\EscapeFromTarkov.exe";
@@ -299,19 +263,11 @@ namespace SIT.Launcher
             }
         }
 
-        public string Username
-        {
-            get
-            {
+        public string Username => Config.Username;
 
-                return Config.Username;
-            }
-        }
+        public string ServerAddress => Config.ServerInstance.ServerAddress;
 
-        public string ServerAddress { get {
-
-                return Config.ServerInstance.ServerAddress;
-            } }
+        public string WebsocketUrl => Config.ServerInstance.WebsocketUrl ?? ServerAddress;
 
 
         private void btnAddNewServer_Click(object sender, RoutedEventArgs e)
@@ -345,12 +301,12 @@ namespace SIT.Launcher
             data.Add("email", Username);
             data.Add("edition", "Edge Of Darkness"); // default to EoD
             //data.Add("edition", "Standard");
-            if (string.IsNullOrEmpty(txtPassword.Password))
+            if (string.IsNullOrEmpty(TxtPassword.Password))
             {
                 MessageBox.Show("You cannot use an empty Password for your account!");
                 return null;
             }
-            data.Add("password", txtPassword.Password);
+            data.Add("password", TxtPassword.Password);
 
             // connect and get editions
             //var returnDataConnect = requesting.PostJson("/launcher/server/connect", JsonConvert.SerializeObject(data));
@@ -495,16 +451,26 @@ namespace SIT.Launcher
 
         private async void StartGame(string sessionId, string installLocation)
         {
+            //App.LegalityCheck();
             CleanupDirectory(installLocation);
 
             UpdateButtonText(null);
             btnLaunchGame.IsEnabled = true;
-            var commandArgs = $"-token={sessionId} -config={{\"BackendUrl\":\"{ServerAddress}\",\"Version\":\"live\"}}";
+            var commandArgs = $"-token={sessionId} -config={{\"BackendUrl\":\"{ServerAddress}\",\"WebsocketUrl\":{WebsocketUrl}\",\"Version\":\"live\"}}";
             Process.Start(installLocation, commandArgs);
             Config.Save();
             WindowState = WindowState.Minimized;
 
             await Task.Delay(10000);
+
+            //if (Config.SendInfoToDiscord)
+            //    DiscordInterop.DiscordRpcClient.UpdateDetails("In Game");
+            ////do
+            ////{
+
+            ////} while (Process.GetProcessesByName("EscapeFromTarkov") != null);
+            //if (Config.SendInfoToDiscord)
+            //    DiscordInterop.DiscordRpcClient.UpdateDetails("");
         }
 
         private void CleanupDirectory(string installLocation)
@@ -566,9 +532,11 @@ namespace SIT.Launcher
                 var bepinexCorePath = System.IO.Path.Combine(bepinexPath, "core");
                 var bepinexPluginsPath = System.IO.Path.Combine(bepinexPath, "plugins");
 
-                var savedBepinexZipPath = App.ApplicationDirectory + "\\BepInEx5.4.22.zip";
 
-                if (!File.Exists(savedBepinexZipPath))
+                UpdateButtonText("Installing BepInEx");
+                await Task.Delay(500);
+
+                if (!File.Exists(App.ApplicationDirectory + "\\BepInEx5.zip"))
                 {
                     UpdateButtonText("Downloading BepInEx");
                     await Task.Delay(500);
@@ -577,29 +545,26 @@ namespace SIT.Launcher
                     {
                         var httpClient = new HttpClient();
                         httpClient.Timeout = new TimeSpan(0, 1, 0);
-                        using (var rStream = await httpClient.GetStreamAsync("https://github.com/BepInEx/BepInEx/releases/download/v5.4.22/BepInEx_x64_5.4.22.0.zip")) 
+                        using (var rStream = await httpClient.GetStreamAsync("https://github.com/BepInEx/BepInEx/releases/download/v5.4.21/BepInEx_x64_5.4.21.0.zip")) // response.GetResponseStream();
                         {
                             rStream.CopyTo(ms);
-                            await File.WriteAllBytesAsync(savedBepinexZipPath, ms.ToArray());
+                            await File.WriteAllBytesAsync(App.ApplicationDirectory + "\\BepInEx5.zip", ms.ToArray());
                         }
                     }
                 }
 
-                if (DoesBepInExExistInInstall(exeLocation) && File.Exists("CurrentBepinexVersion.txt") && File.ReadAllText("CurrentBepinexVersion.txt") == savedBepinexZipPath)
+                if (DoesBepInExExistInInstall(exeLocation))
                     return true;
 
                 UpdateButtonText("Installing BepInEx");
 
-                System.IO.Compression.ZipFile.ExtractToDirectory(savedBepinexZipPath, baseGamePath, true);
+                System.IO.Compression.ZipFile.ExtractToDirectory(App.ApplicationDirectory + "\\BepInEx5.zip", baseGamePath, true);
                 if (!Directory.Exists(bepinexPluginsPath))
                 {
                     Directory.CreateDirectory(bepinexPluginsPath);
                 }
-
-                File.WriteAllText("CurrentBepinexVersion.txt", savedBepinexZipPath);
-
             }
-            catch (Exception ex) 
+            catch(Exception ex) 
             { 
                 MessageBox.Show($"Unable to Install BepInEx: {ex.Message}", "Error");
                 return false;
@@ -654,35 +619,26 @@ namespace SIT.Launcher
                 return false;
 
        
+            UpdateButtonText("Downloading SIT");
+
             try
             {
 
-                //var github = new GitHubClient(new ProductHeaderValue("SIT-Launcher"));
-                //var user = await github.User.Get("paulov-t");
-                //var tarkovCoreReleases = await github.Repository.Release.GetAll("paulov-t", "SIT.Core", new ApiOptions() { });
-                //var tarkovCoreReleasesOrdered = tarkovCoreReleases.OrderByDescending(x => x.CreatedAt).ToList();
-                Release latestCore = SelectedSITRelease;
-                //if ((Config.AutomaticallyInstallSITPreRelease || Config.ForceInstallLatestSIT) && tarkovCoreReleasesOrdered[0].Prerelease)
-                //    latestCore = tarkovCoreReleasesOrdered[0];
+                var github = new GitHubClient(new ProductHeaderValue("SIT-Launcher"));
+                var user = await github.User.Get("paulov-t");
+                var tarkovCoreReleases = await github.Repository.Release.GetAll("paulov-t", "SIT.Core", new ApiOptions() { });
+                var tarkovCoreReleasesOrdered = tarkovCoreReleases.OrderByDescending(x => x.CreatedAt).ToList();
+                Release latestCore = null;
+                if ((Config.AutomaticallyInstallSITPreRelease || Config.ForceInstallLatestSIT) && tarkovCoreReleasesOrdered[0].Prerelease)
+                    latestCore = tarkovCoreReleasesOrdered[0];
 
-                //if (latestCore == null)
-                //    latestCore = tarkovCoreReleasesOrdered.First(x => !x.Prerelease);
+                if (latestCore == null)
+                    latestCore = tarkovCoreReleasesOrdered.First(x => !x.Prerelease);
 
                 var clientModsDeliveryPath = Path.Combine(App.ApplicationDirectory, "ClientMods");
                 Directory.CreateDirectory(clientModsDeliveryPath);
 
-                // Checks the current downloaded version and only downloads if needed
-                if (File.Exists("CurrentSITVersion.txt")) 
-                {
-                    var currentSITVersionText = File.ReadAllText("CurrentSITVersion.txt");
-                }
-                if (File.Exists("CurrentSITVersion.txt") && File.ReadAllText("CurrentSITVersion.txt") == latestCore.Name && !Config.ForceInstallLatestSIT)
-                {
-                    await loadingDialog.UpdateAsync(null, null);
-                    return true;
-                }
-
-                var maxSize = 90000000;
+                var maxSize = 100000000;
                 var allAssets = latestCore
                     .Assets
                     .Where(x => x.Size < maxSize)
@@ -704,7 +660,7 @@ namespace SIT.Launcher
                         var ms = new MemoryStream();
                         await response.Content.CopyToAsync(ms);
 
-                        var deliveryPath = Path.Combine(clientModsDeliveryPath, asset.Name);
+                        var deliveryPath = Path.Combine(clientModsDeliveryPath, asset.Name); //App.ApplicationDirectory + "\\ClientMods\\" + asset.Name;
                         var fiDelivery = new FileInfo(deliveryPath);
                         await File.WriteAllBytesAsync(deliveryPath, ms.ToArray());
                     }
@@ -721,7 +677,8 @@ namespace SIT.Launcher
                 {
                     if (clientModDLL.Contains("Assembly-CSharp"))
                     {
-                        var assemblyLocation = Path.Combine(Directory.GetParent(exeLocation).FullName, "EscapeFromTarkov_Data", "Managed", "Assembly-CSharp.dll");
+                        var assemblyLocation = exeLocation.Replace("EscapeFromTarkov.exe", "");
+                        assemblyLocation += "EscapeFromTarkov_Data\\Managed\\Assembly-CSharp.dll";
 
                         // Backup the Assembly-CSharp and place the newest clean one
                         if (!File.Exists(assemblyLocation + ".backup"))
