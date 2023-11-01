@@ -194,7 +194,7 @@ namespace SIT.Launcher
             foreach (var file in officialFiles)
             {
                 var percent = (int)Math.Round((decimal)(currentNumber / countOfOfficialFiles) * 100);
-                loadingDialog.UpdateAsync("Installing", $"Copying file: {file.Name}", percent);
+                await loadingDialog.UpdateAsync("Installing", $"Copying file: {file.Name}", percent);
                 var newFilePath = file.FullName.Replace(fiOfficialGame.DirectoryName, offlineFolder);
                 Directory.CreateDirectory(Directory.GetParent(newFilePath).FullName);
 
