@@ -1,0 +1,35 @@
+﻿on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  publish:
+    name: .NET on ${{ matrix.runs-on }} (${{ matrix.configuration }})
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on: [ windows-latest ]
+        configuration: [ Release ]
+    steps:
+      - uses: actions/checkout@v3
+        
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+
+      - name: Build
+        run: dotnet build --locked-mode -c ${{ matrix.configuration }}
+
+      - name: Publish
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          files: |
+            Source/bin/${{ matrix.configuration }}/
+          tag_name: ${{ github.ref }}
+          body: |
+            ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false
