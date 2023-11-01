@@ -91,9 +91,9 @@ namespace SIT.Launcher
             });
         }
 
-        public async void UpdateAsync(string loadingSubTitle, string loadingCurrentMessage, int progress)
+        public Task<bool> UpdateAsync(string loadingSubTitle, string loadingCurrentMessage, int progress)
         {
-            await Task.Run(() => { Update(loadingSubTitle, loadingCurrentMessage, progress); });
+            return Task.Run(() => { Update(loadingSubTitle, loadingCurrentMessage, progress); return true; });
         }
 
         public void Log(string text, params object[] vars)
