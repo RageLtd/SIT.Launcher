@@ -1,12 +1,11 @@
 ﻿on:
   push:
-    branches:
-      - master
     tags:
-      - 'v*.*.*'
+      - v*
 
 jobs:
   publish:
+    if: contains(github.ref, 'master')
     name: .NET on ${{ matrix.runs-on }} (${{ matrix.configuration }})
     runs-on: ${{ matrix.runs-on }}
     strategy:
@@ -27,12 +26,10 @@ jobs:
         id: build
         run: dotnet build --no-restore -c ${{ matrix.configuration }}
 
-      - name: Publish
-        uses: softprops/action-gh-release@v0.1.15
+      - name: Release
+        uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
-          files: ${{ github.workspace }}\SIT.Launcher\bin\${{ matrix.configuration }}\**\*.*
-          tag_name: ${{ github.ref }}
-          body: |
-            ${{ github.event.head_commit.message }}
-          draft: false
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
+          files: |
+            ${{ github.workspace }}\SIT.Launcher\bin\${{ matrix.configuration }}\**\*
