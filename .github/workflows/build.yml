@@ -39,11 +39,10 @@ jobs:
       - name: Output directory listing
         run: Get-ChildItem -recurse -path {{ github.workspace }}
 
-
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: Rage-SIT-Build-${{ matrix.configuration }}
-          path: ${{ githb.workspace }}\SIT.Launcher\bin\${{ matrix.configuration }}\**\*.*
+          path: ${{ github.workspace }}\SIT.Launcher\bin\${{ matrix.configuration }}\**\*.*
           if-no-files-found: error
 
