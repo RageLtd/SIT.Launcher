@@ -32,13 +32,13 @@ jobs:
 
       - name: Build
         id: build
-        run: dotnet publish --no-restore -c Release .\SIT.Launcher\SIT.Launcher.csproj -p:Version=${{ steps.tag_version.outputs.new_tag }}
+        run: dotnet publish --no-restore -c Release -p:Version=${{ steps.tag_version.outputs.new_tag }}
         
       - name: Upload Package for Publishing
         uses: actions/upload-artifact@v3
         with:
           name: Rage-SIT-${{ steps.tag_version.outputs.new_tag }}
-          path: ${{ github.workspace }}\SIT.Launcher\bin\${{ matrix.configuration }}\publish
+          path: ${{ github.workspace }}\bin\${{ matrix.configuration }}\publish
           if-no-files-found: error
           
   publish:
