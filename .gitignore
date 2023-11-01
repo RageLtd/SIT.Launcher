@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 # Idea config
 .idea/
+.run/
