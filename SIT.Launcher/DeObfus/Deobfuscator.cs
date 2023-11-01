@@ -367,7 +367,7 @@ namespace SIT.Launcher.DeObfus
         {
             if (!config.EnableAddSPTUsecBearToDll.HasValue || !config.EnableAddSPTUsecBearToDll.Value)
                 return;
-
+            
             long sptUsecValue = 0x29L;
             long sptBearValue = 0x30L;
 
