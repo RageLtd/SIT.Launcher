@@ -40,7 +40,7 @@ jobs:
 
       - name: Build
         id: build
-        run: dotnet publish --no-restore -c Release -p:Version=${{ steps.tag_version.outputs.new_tag }}
+        run: dotnet publish --no-restore -c Release -p:Version=${{ steps.tag_version.outputs.new_tag }} ${{ github.workspace }}\SIT.Launcher\SIT.Launcher.csproj
         
       - name: Package
         # zip up assets

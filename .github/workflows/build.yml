@@ -34,7 +34,7 @@ jobs:
 
       - name: Build
         id: build
-        run: dotnet build --no-restore -c ${{ matrix.configuration }}
+        run: dotnet build --no-restore -c ${{ matrix.configuration }} ${{ github.workspace }}\SIT.Launcher\SIT.Launcher.csproj
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
