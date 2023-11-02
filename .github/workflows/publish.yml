@@ -59,6 +59,7 @@ jobs:
       - name: Publish to Github Releases
         uses: ncipollo/release-action@v1
         with:
+          tag: ${{ needs.release.outputs.new_version }}
           artifacts: Rage-SIT-${{ needs.release.outputs.new_version }}
           token: ${{ secrets.GITHUB_TOKEN }}
           releaseName: Release ${{ needs.release.outputs.new_version }}
