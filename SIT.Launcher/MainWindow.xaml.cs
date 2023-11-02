@@ -137,7 +137,7 @@ namespace SIT.Launcher
             if (!offlineAssemblyCSharpPath.Exists)
                 return false;
 
-            var officialIsUpdated = officialAssemblyCSharpPath.CreationTime > offlineAssemblyCSharpPath.LastWriteTime; 
+            var officialIsUpdated = officialAssemblyCSharpPath.CreationTime > offlineAssemblyCSharpPath.LastWriteTime;
             return officialIsUpdated;
         }
 
@@ -148,15 +148,15 @@ namespace SIT.Launcher
         private async void NewInstallFromOfficial()
         {
             // Brand new setup of SIT
-            if (string.IsNullOrEmpty(Config.InstallLocation) 
-                
+            if (string.IsNullOrEmpty(Config.InstallLocation)
+
                 // Config Install Location exists, but the install location looks suspiciuosly like a direct copy of Live
                 // Check BepInEx
                 || !DoesBepInExExistInInstall(Config.InstallLocation)
                 // Check SIT.Core
                 || !IsSITCoreInstalled(Config.InstallLocation)
-               
-                
+
+
                 )
             {
                 if (MessageBox.Show("No OFFLINE install found. Would you like to install now?", "Install", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -220,7 +220,7 @@ namespace SIT.Launcher
                                         .Select(x => new FileInfo(x));
             foreach (var file in offlineFolderFiles)
             {
-                if(file.FullName.EndsWith(".backup") || file.FullName.EndsWith("-cleaned.dll"))
+                if (file.FullName.EndsWith(".backup") || file.FullName.EndsWith("-cleaned.dll"))
                     file.Delete();
             }
             //
@@ -228,14 +228,14 @@ namespace SIT.Launcher
 
             await loadingDialog.UpdateAsync("Installing", $"Cleaning EFT OFFLINE Directory");
             CleanupDirectory(exeLocation);
-           
+
             await loadingDialog.UpdateAsync("Installing", $"Installing BepInEx");
             await DownloadAndInstallBepInEx5(exeLocation);
-           
+
             await loadingDialog.UpdateAsync("Installing", $"Installing SIT.Core");
             await DownloadAndInstallSIT(exeLocation);
 
-          
+
 
             UpdateButtonText(null);
 
@@ -250,12 +250,12 @@ namespace SIT.Launcher
 
         public LauncherConfig Config { get; } = LauncherConfig.Instance;
 
-        public IEnumerable<ServerInstance> ServerInstances 
-        { 
-            get 
+        public IEnumerable<ServerInstance> ServerInstances
+        {
+            get
             {
                 return ServerInstance.ServerInstances.AsEnumerable();
-            } 
+            }
         }
 
         public enum ELaunchButtonState : short
@@ -269,9 +269,9 @@ namespace SIT.Launcher
 
         private string _launchButtonText = "Launch";
 
-        public string LaunchButtonText 
-        { 
-            get 
+        public string LaunchButtonText
+        {
+            get
             {
                 switch (LaunchButtonState)
                 {
@@ -416,7 +416,7 @@ namespace SIT.Launcher
                 var messageBoxResult = MessageBox.Show("Something went wrong. Maybe the server hasn't been started? Check the logs.", "Account");
             }
 
-            if(Config.CloseLauncherAfterLaunch)
+            if (Config.CloseLauncherAfterLaunch)
             {
                 App.Current.Shutdown();
             }
@@ -441,12 +441,12 @@ namespace SIT.Launcher
 
         private async Task DownloadInstallAndStartGame(string sessionId)
         {
-            
+
 
             btnLaunchGame.IsEnabled = false;
 
             var installLocation = Config.InstallLocation;
-            if(!await DownloadAndInstallBepInEx5(installLocation))
+            if (!await DownloadAndInstallBepInEx5(installLocation))
             {
                 MessageBox.Show("Install and Start aborted");
                 return;
@@ -464,7 +464,7 @@ namespace SIT.Launcher
                 MessageBox.Show("Install and Start aborted");
                 return;
             }
-            
+
 
             // Deobfuscate Assembly-CSharp
             if (Config.AutomaticallyDeobfuscateDlls
@@ -599,10 +599,10 @@ namespace SIT.Launcher
                 }
 
                 File.WriteAllText("CurrentBepinexVersion.txt", savedBepinexZipPath);
-                
+
             }
-            catch(Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 MessageBox.Show($"Unable to Install BepInEx: {ex.Message}", "Error");
                 return false;
             }
@@ -615,7 +615,8 @@ namespace SIT.Launcher
 
         private void UpdateButtonText(string text)
         {
-            if (!string.IsNullOrEmpty(text)) {
+            if (!string.IsNullOrEmpty(text))
+            {
                 LaunchButtonText = text;
                 LaunchButtonState = ELaunchButtonState.Custom;
             }
@@ -655,10 +656,10 @@ namespace SIT.Launcher
             if (!Directory.Exists(bepinexPluginsPath))
                 return false;
 
-       
+
             UpdateButtonText("Downloading SIT");
 
-             try
+            try
             {
 
                 //var github = new GitHubClient(new ProductHeaderValue("SIT-Launcher"));
@@ -685,7 +686,7 @@ namespace SIT.Launcher
                 Directory.CreateDirectory(clientModsDeliveryPath);
 
                 // Checks the current downloaded version and only downloads if needed
-                if (File.Exists("CurrentSITVersion.txt")) 
+                if (File.Exists("CurrentSITVersion.txt"))
                 {
                     var currentSITVersionText = File.ReadAllText("CurrentSITVersion.txt");
                 }
@@ -938,7 +939,7 @@ namespace SIT.Launcher
 
             var deobfuscateLogPath = "DeobfuscateLog.txt";
             if (File.Exists(deobfuscateLogPath))
-                File.Delete(deobfuscateLogPath);    
+                File.Delete(deobfuscateLogPath);
 
             await File.WriteAllTextAsync(deobfuscateLogPath, txtDeobfuscateLog.Text);
             //Deobfuscator.OnLog -= OnDeobfuscateLog;
@@ -965,7 +966,7 @@ namespace SIT.Launcher
             }
         }
 
-       
+
 
         private void btnStartServer_Click(object sender, RoutedEventArgs e)
         {
@@ -974,7 +975,7 @@ namespace SIT.Launcher
             if (openFileDialog.ShowDialog() == true)
             {
                 //if(!Process.GetProcessesByName("Server").Any())
-                    Process.Start(openFileDialog.FileName, "");
+                Process.Start(openFileDialog.FileName, "");
             }
         }
 
@@ -1057,7 +1058,7 @@ namespace SIT.Launcher
         private void btnServerCommand_Click(object sender, RoutedEventArgs e)
         {
             FolderBrowserEx.FolderBrowserDialog folderBrowserDialog = new FolderBrowserEx.FolderBrowserDialog();
-            if(folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 Process p = new Process();
                 p.StartInfo.UseShellExecute = false;
@@ -1078,16 +1079,17 @@ namespace SIT.Launcher
 
                 //Process.Start("CMD.exe", @"/C npm i");
                 //Process.Start("CMD.exe", @"/C npm run run:server");
-                
+
             }
         }
 
         private void process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Dispatcher.Invoke(() => {
+            Dispatcher.Invoke(() =>
+            {
 
                 txtServerLog.Text += e.Data ?? e.Data;
-            
+
             });
         }
 

@@ -19,6 +19,8 @@ jobs:
         configuration: [Release, Debug]
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         id: setup-dotnet
@@ -33,7 +35,7 @@ jobs:
 
       - name: Build
         id: build
-        run: dotnet build --no-restore -c ${{ matrix.configuration }} ${{ github.workspace }}\SIT.Launcher\SIT.Launcher.csproj
+        run: dotnet build --no-restore -c ${{ matrix.configuration }} -r win-x64 ${{ github.workspace }}\SIT.Launcher\SIT.Launcher.csproj
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3

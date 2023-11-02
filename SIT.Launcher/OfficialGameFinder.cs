@@ -12,7 +12,7 @@ namespace SIT.Launcher
     {
         public static FileInfo FindOfficialGame()
         {
-            if(LegalGameCheck.LegalityCheck(out var filePath)) 
+            if (LegalGameCheck.LegalityCheck(out var filePath))
                 return new FileInfo(filePath);
 
             else return null;

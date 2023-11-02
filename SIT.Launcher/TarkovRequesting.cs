@@ -31,7 +31,7 @@ namespace SIT.Launcher
             httpClient.DefaultRequestHeaders.Add("Cookie", $"PHPSESSID={Session}");
             httpClient.DefaultRequestHeaders.Add("SessionId", Session);
             httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "deflate");
-            httpClient.Timeout = new TimeSpan(0,0,1);
+            httpClient.Timeout = new TimeSpan(0, 0, 1);
         }
 
         //private static byte[] CompressFile(Stream stream)
@@ -117,7 +117,7 @@ namespace SIT.Launcher
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 request.Content.Headers.ContentLength = bytes.Length;
             }
-            
+
             // Send request
             try
             {
@@ -171,11 +171,11 @@ namespace SIT.Launcher
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 request.Content.Headers.ContentLength = bytes.Length;
             }
-            
+
             // Send Request
             var response = httpClient.SendAsync(request).Result;
             return response.Content.ReadAsStreamAsync().Result;
-           
+
         }
 
         public void PutJson(string url, string data, bool compress = true)
@@ -205,6 +205,6 @@ namespace SIT.Launcher
             return SimpleZlib.Decompress(ms.ToArray(), null);
         }
 
-        
+
     }
 }

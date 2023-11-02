@@ -8,6 +8,6 @@ namespace SIT.Launcher
 {
     internal interface ILogger
     {
-        public void Log(string message);    
+        public void Log(string message);
     }
 }

@@ -7,20 +7,22 @@
         <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
         <PlatformTarget>x64</PlatformTarget>
         <ApplicationIcon>Stay-In-Tarkov-512.ico</ApplicationIcon>
-        <PublishSingleFile>true</PublishSingleFile>
-        <PublishReadyToRun>true</PublishReadyToRun>
         <!-- <SelfContained>true</SelfContained>-->
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <PublishSingleFile>true</PublishSingleFile>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <SelfContained>false</SelfContained>
 
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <Deterministic>false</Deterministic>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <OutputPath>bin\$(Configuration)</OutputPath>
-        <Platforms>x64</Platforms>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     </PropertyGroup>
 
     <Choose>
-        <When Condition="'$(Configuration)' != 'Debug'">
+        <When Condition="'$(Configuration)' == 'Release'">
             <PropertyGroup>
                 <DebugSymbols>false</DebugSymbols>
                 <DebugType>none</DebugType>
@@ -38,14 +40,6 @@
             </PropertyGroup>
         </Otherwise>
     </Choose>
-    
-    <Target Name="ShowProperties">
-        <Message Text="Configuration: $(Configuration)" />
-        <Message Text="DebugSymbols: $(DebugSymbols)" />
-        <Message Text="Optimize: $(Optimize)" />
-        <Message Text="DefineConstants: $(DefineConstants)" />
-        <Message Text="OutputPath: $(OutputPath)" />
-    </Target>
 
     <ItemGroup>
         <None Remove="AkiSupport\Bepinex\aki-core.dll" />
@@ -73,408 +67,146 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Resource Include="Images\StayInTarkov.jpg">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Resource>
+        <Resource Include="Images\StayInTarkov.jpg" />
         <Resource Include="Resources\Languages\English.xaml" />
-        <Content Include="AkiSupport\Bepinex\Patchers\DONOTDELETE.txt">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="AkiSupport\Bepinex\Plugins\DONOTDELETE.txt">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="AkiSupport\Managed\Aki.Common.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="AkiSupport\Managed\Aki.Reflection.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
+        <Content Include="AkiSupport\Bepinex\Patchers\DONOTDELETE.txt" />
+        <Content Include="AkiSupport\Bepinex\Plugins\DONOTDELETE.txt" />
+        <Content Include="AkiSupport\Managed\Aki.Common.dll" />
+        <Content Include="AkiSupport\Managed\Aki.Reflection.dll" />
         <Content Include="ClientMods\DONOTDELETE.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
-
         <Content Include="DeObfus\de4dot\AssemblyData.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
         <Content Include="DeObfus\de4dot\de4dot.blocks.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
         <Content Include="DeObfus\de4dot\de4dot.code.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
         <Content Include="DeObfus\de4dot\de4dot.cui.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
         <Content Include="DeObfus\de4dot\de4dot.exe">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
         <Content Include="DeObfus\de4dot\de4dot.mdecrypt.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
         <Content Include="DeObfus\de4dot\dnlib.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
         <Content Include="DeObfus\mappings\BaseRemapperConfig.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
         <Content Include="DeObfus\mappings\Aki\AkiRemapperConfig.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
         <Content Include="DeObfus\mappings\SIT\SITRemapperConfig.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
-        <Content Include="References\Accessibility.dll">
+        <Reference Include="References\Accessibility.dll" />
+        <Reference Include="References\Boo.Lang.dll" />
+        <Reference Include="References\bsg.console.core.dll" />
+        <Reference Include="References\Comfort.dll" />
+        <Reference Include="References\Comfort.Unity.dll" />
+        <Reference Include="References\CommonExtensions.dll" />
+        <Reference Include="References\DissonanceVoip.dll" />
+        <Reference Include="References\DOTween.dll" />
+        <Reference Include="References\DOTween.Modules.dll" />
+        <Reference Include="References\FbxBuildTestAssets.dll" />
+        <Reference Include="References\FilesChecker.dll" />
+        <Reference Include="References\ItemComponent.Types.dll" />
+        <Reference Include="References\ItemTemplate.Types.dll" />
+        <Reference Include="References\JBooth.MicroSplat.Core.dll" />
+        <Reference Include="References\LibraryLoaderUtility.dll" />
+        <Reference Include="References\Mono.Data.Sqlite.dll" />
+        <Reference Include="References\Mono.Messaging.dll" />
+        <Reference Include="References\Mono.Posix.dll" />
+        <Reference Include="References\Mono.Security.dll" />
+        <Reference Include="References\Mono.WebBrowser.dll" />
+        <Reference Include="References\mscorlib.dll" />
+        <Reference Include="References\netstandard.dll" />
+        <Reference Include="References\Newtonsoft.Json.dll" />
+        <Reference Include="References\Newtonsoft.Json.UnityConverters.dll" />
+        <Reference Include="References\NLog.dll" />
+        <Reference Include="References\Novell.Directory.Ldap.dll" />
+        <Reference Include="References\Polybrush.dll" />
+        <Reference Include="References\Sirenix.OdinInspector.Attributes.dll" />
+        <Reference Include="References\Sirenix.OdinInspector.CompatibilityLayer.dll" />
+        <Reference Include="References\Sirenix.Serialization.Config.dll" />
+        <Reference Include="References\Sirenix.Serialization.dll" />
+        <Reference Include="References\Sirenix.Utilities.dll" />
+        <Reference Include="References\SteamAudio.dll" />
+        <Reference Include="References\System.Buffers.dll" />
+        <Reference Include="References\System.ComponentModel.Composition.dll" />
+        <Reference Include="References\System.ComponentModel.DataAnnotations.dll" />
+        <Reference Include="References\System.Configuration.dll">
+            <CopyToOutputDirectory>true</CopyToOutputDirectory>
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        </Reference>
+        <Reference Include="References\System.Configuration.Install.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Boo.Lang.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\bsg.console.core.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\bsg.system.buffers.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Comfort.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Comfort.Unity.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\CommonExtensions.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\DissonanceVoip.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\DOTween.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\DOTween.Modules.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\FbxBuildTestAssets.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\FilesChecker.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\ItemComponent.Types.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\ItemTemplate.Types.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\JBooth.MicroSplat.Core.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\LibraryLoaderUtility.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Mono.Data.Sqlite.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Mono.Messaging.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Mono.Posix.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Mono.Security.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Mono.WebBrowser.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\mscorlib.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\netstandard.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Newtonsoft.Json.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Newtonsoft.Json.UnityConverters.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\NLog.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Novell.Directory.Ldap.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Polybrush.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Sirenix.OdinInspector.Attributes.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Sirenix.OdinInspector.CompatibilityLayer.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Sirenix.Serialization.Config.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Sirenix.Serialization.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\Sirenix.Utilities.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\SteamAudio.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Buffers.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.ComponentModel.Composition.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.ComponentModel.DataAnnotations.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Configuration.dll">
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Configuration.Install.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-        <Content Include="References\System.Core.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Data.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Design.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Diagnostics.Debug.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Diagnostics.StackTrace.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Diagnostics.Tracing.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.DirectoryServices.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Drawing.Design.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Drawing.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.EnterpriseServices.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Globalization.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Globalization.Extensions.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.IdentityModel.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.IdentityModel.Selectors.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
+        </Reference>
+        <Reference Include="References\System.Core.dll" />
+        <Reference Include="References\System.Data.dll" />
+        <Reference Include="References\System.Design.dll" />
+        <Reference Include="References\System.Diagnostics.Debug.dll" />
+        <Reference Include="References\System.Diagnostics.StackTrace.dll" />
+        <Reference Include="References\System.Diagnostics.Tracing.dll" />
+        <Reference Include="References\System.DirectoryServices.dll" />
+        <Reference Include="References\System.dll" />
+        <Reference Include="References\System.Drawing.Design.dll" />
+        <Reference Include="References\System.Drawing.dll" />
+        <Reference Include="References\System.EnterpriseServices.dll" />
+        <Reference Include="References\System.Globalization.dll" />
+        <Reference Include="References\System.Globalization.Extensions.dll" />
+        <Reference Include="References\System.IdentityModel.dll" />
+        <Reference Include="References\System.IdentityModel.Selectors.dll" />
         <Content Include="References\System.IO.Compression.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="References\System.IO.Compression.FileSystem.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Memory.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Messaging.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Net.Http.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Numerics.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Reflection.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Resources.ResourceManager.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Runtime.CompilerServices.Unsafe.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Runtime.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Runtime.DurableInstancing.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Runtime.Extensions.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Runtime.InteropServices.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Runtime.Serialization.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Runtime.Serialization.Formatters.Soap.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Runtime.Serialization.Xml.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Security.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.ServiceModel.Activation.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.ServiceModel.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.ServiceModel.Internals.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Threading.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Transactions.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Web.ApplicationServices.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Web.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Web.Services.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Windows.Forms.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Xaml.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Xml.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Xml.Linq.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <Content Include="References\System.Xml.XPath.XDocument.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
+        <Reference Include="References\System.IO.Compression.FileSystem.dll" />
+        <Reference Include="References\System.Memory.dll" />
+        <Reference Include="References\System.Messaging.dll" />
+        <Reference Include="References\System.Net.Http.dll" />
+        <Reference Include="References\System.Numerics.dll" />
+        <Reference Include="References\System.Reflection.dll" />
+        <Reference Include="References\System.Resources.ResourceManager.dll" />
+        <Reference Include="References\System.Runtime.CompilerServices.Unsafe.dll" />
+        <Reference Include="References\System.Runtime.dll" />
+        <Reference Include="References\System.Runtime.DurableInstancing.dll" />
+        <Reference Include="References\System.Runtime.Extensions.dll" />
+        <Reference Include="References\System.Runtime.InteropServices.dll" />
+        <Reference Include="References\System.Runtime.Serialization.dll" />
+        <Reference Include="References\System.Runtime.Serialization.Formatters.Soap.dll" />
+        <Reference Include="References\System.Runtime.Serialization.Xml.dll" />
+        <Reference Include="References\System.Security.dll" />
+        <Reference Include="References\System.ServiceModel.Activation.dll" />
+        <Reference Include="References\System.ServiceModel.dll" />
+        <Reference Include="References\System.ServiceModel.Internals.dll" />
+        <Reference Include="References\System.Threading.dll" />
+        <Reference Include="References\System.Transactions.dll" />
+        <Reference Include="References\System.Web.ApplicationServices.dll" />
+        <Reference Include="References\System.Web.dll" />
+        <Reference Include="References\System.Web.Services.dll" />
+        <Reference Include="References\System.Windows.Forms.dll" />
+        <Reference Include="References\System.Xaml.dll" />
+        <Reference Include="References\System.Xml.dll" />
+        <Reference Include="References\System.Xml.Linq.dll" />
+        <Reference Include="References\System.Xml.XPath.XDocument.dll" />
         <Content Include="Stay-In-Tarkov-512.ico" />
     </ItemGroup>
 

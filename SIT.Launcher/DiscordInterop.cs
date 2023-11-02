@@ -34,20 +34,22 @@ namespace SIT.Launcher
         {
             //return await Task.Run(() =>
             //{
-                if (DiscordRpcClient == null)
+            if (DiscordRpcClient == null)
+            {
+                DiscordRpcClient = new DiscordRPC("983769140684791808")
                 {
-                    DiscordRpcClient = new DiscordRPC("983769140684791808");
-                    DiscordRpcClient.Logger = new NetDiscordRpc.Core.Logger.NullLogger();
-                    DiscordRpcClient.Initialize();
-                    DiscordRpcClient.SetPresence(new RichPresence()
-                    {
-                        Details = "",
-                        State = productVersion,
-                    });
-                    //DiscordRpcClient.Invoke();
+                    Logger = new NetDiscordRpc.Core.Logger.NullLogger()
+                };
+                DiscordRpcClient.Initialize();
+                DiscordRpcClient.SetPresence(new RichPresence()
+                {
+                    Details = "",
+                    State = productVersion,
+                });
+                //DiscordRpcClient.Invoke();
 
-                }
-                return DiscordRpcClient;
+            }
+            return DiscordRpcClient;
             //});
         }
 

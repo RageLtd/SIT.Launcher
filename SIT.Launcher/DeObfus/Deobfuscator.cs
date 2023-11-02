@@ -19,8 +19,8 @@ using System.Threading.Tasks;
  */
 namespace SIT.Launcher.DeObfus
 {
-	internal static class Deobfuscator
-	{
+    internal static class Deobfuscator
+    {
         public static List<string> UsedTypesByOtherDlls { get; } = new List<string>();
 
         public delegate void LogHandler(string text);
@@ -31,7 +31,7 @@ namespace SIT.Launcher.DeObfus
 
         internal static void Log(string text)
         {
-            if (NestedLogger != null) 
+            if (NestedLogger != null)
             {
                 NestedLogger.Log(text);
                 return;
@@ -142,8 +142,8 @@ namespace SIT.Launcher.DeObfus
             psi.Arguments = $"--un-name \"!^<>[a-z0-9]$&!^<>[a-z0-9]__.*$&![A-Z][A-Z]\\$<>.*$&^[a-zA-Z_<{{$][a-zA-Z_0-9<>{{}}$.`-]*$\" \"{assemblyPath}\" --strtyp delegate --strtok \"{token}\"";
 
             Process proc = Process.Start(psi);
-            proc.WaitForExit(new TimeSpan(0,2,0));
-            if(proc != null)
+            proc.WaitForExit(new TimeSpan(0, 2, 0));
+            if (proc != null)
                 proc.Kill(true);
 
 
@@ -224,7 +224,7 @@ namespace SIT.Launcher.DeObfus
                 {
                     if (oldAssembly != null)
                     {
-                        foreach(var fI in Directory.GetFiles(App.ApplicationDirectory + "//DeObfus//mappings//", "*.json", SearchOption.AllDirectories).Select(x=> new FileInfo(x)))
+                        foreach (var fI in Directory.GetFiles(App.ApplicationDirectory + "//DeObfus//mappings//", "*.json", SearchOption.AllDirectories).Select(x => new FileInfo(x)))
                         {
                             if (!fI.Exists)
                                 continue;
@@ -291,11 +291,11 @@ namespace SIT.Launcher.DeObfus
                     if (t.IsNested)
                     {
                         t.IsNestedPublic = true;
-                        if(!t.DeclaringType.IsPublic)
+                        if (!t.DeclaringType.IsPublic)
                         {
                             t.DeclaringType.IsPublic = true;
                         }
-                        foreach(var inte in t.Interfaces)
+                        foreach (var inte in t.Interfaces)
                         {
 
                         }
@@ -367,7 +367,7 @@ namespace SIT.Launcher.DeObfus
         {
             if (!config.EnableAddSPTUsecBearToDll.HasValue || !config.EnableAddSPTUsecBearToDll.Value)
                 return;
-            
+
             long sptUsecValue = 0x29L;
             long sptBearValue = 0x30L;
 
@@ -403,9 +403,9 @@ namespace SIT.Launcher.DeObfus
             var types = assembly
                 .MainModule
                 .GetTypes()
-                .Where(x => 
-                x.IsClass 
-                && x.IsDefinition 
+                .Where(x =>
+                x.IsClass
+                && x.IsDefinition
                 //&& x.Namespace.StartsWith("EFT")
                 && !x.Name.Contains("<")
                 && !x.Name.Contains(">")
@@ -481,9 +481,9 @@ namespace SIT.Launcher.DeObfus
 
             var allTypes = assemblyDefinition.MainModule.GetTypes();
             var gclasses = assemblyDefinition.MainModule.GetTypes()
-                .Where(x => 
-                x.Name.StartsWith("GClass") 
-                || x.Name.StartsWith("GStruct") 
+                .Where(x =>
+                x.Name.StartsWith("GClass")
+                || x.Name.StartsWith("GStruct")
                 || (x.Name.StartsWith("Class") || x.Name.StartsWith("Class"))
                 || x.Name.StartsWith("GInterface"))
                 // .Where(x => !x.Name.Contains("`"))
@@ -518,7 +518,7 @@ namespace SIT.Launcher.DeObfus
             Dictionary<string, TypeDefinition> renamedClasses = RenameClassesByCounts(assemblyDefinition, gclassToNameCounts);
             // end of renaming based on discovery
             // ---------------------------------------------------------------------------------------
-            
+
 
             foreach (var t in assemblyDefinition.MainModule.GetTypes().Where(x
                 =>
@@ -702,7 +702,7 @@ namespace SIT.Launcher.DeObfus
                     continue;
 
                 t.Name = newClassName;
-              
+
                 // Add the oldClassName as the Key with the newClassName as the Value
                 renamedClasses.Add(oldClassName, t);
                 Log($"Remapper: Auto Remapped {oldClassName} to {newClassName}");
@@ -749,12 +749,12 @@ namespace SIT.Launcher.DeObfus
                 if (!other.HasFields && !other.HasProperties)
                     continue;
 
-    #if DEBUG
+#if DEBUG
                 if (other.FullName.Contains("EFT.Player"))
                 {
 
                 }
-    #endif
+#endif
 
                 PropertyDefinition[] propertyDefinitions = null;
                 try
@@ -878,7 +878,7 @@ namespace SIT.Launcher.DeObfus
             try
             {
 #if DEBUG
-                if(t.Name == "GStruct143")
+                if (t.Name == "GStruct143")
                 {
 
                 }
@@ -894,8 +894,8 @@ namespace SIT.Launcher.DeObfus
                     if (!other.HasMethods || other.Methods == null)
                         continue;
 
-                    if (other.FullName.Contains("FirearmController")) 
-                    { 
+                    if (other.FullName.Contains("FirearmController"))
+                    {
 
                     }
 
@@ -907,19 +907,19 @@ namespace SIT.Launcher.DeObfus
                         if (!method.Parameters.Any())
                             continue;
 
-                        if(method.Name == "SetLightsState")
+                        if (method.Name == "SetLightsState")
                         {
 
                         }
 
                         foreach (var parameter in method.Parameters
-                            .Where(x => x.ParameterType.Name.Replace("[]","").Replace("`1", "") == t.Name)
+                            .Where(x => x.ParameterType.Name.Replace("[]", "").Replace("`1", "") == t.Name)
                             .Where(x => x.ParameterType.Name.Length > 3)
                             )
                         {
-                            
 
-                            var n = 
+
+                            var n =
                             // Key Value is Built like so. KEY.VALUE
                             parameter.ParameterType.Name
                             .Replace("[]", "")
@@ -928,7 +928,7 @@ namespace SIT.Launcher.DeObfus
                             .Replace("`3", "")
                             .Replace("&", "")
                             .Replace(" ", "")
-                            + "." 
+                            + "."
                             + char.ToUpper(parameter.Name[0]) + parameter.Name.Substring(1)
                             ;
                             if (!gclassToNameCounts.ContainsKey(n))
@@ -955,7 +955,7 @@ namespace SIT.Launcher.DeObfus
             {
 
 #if DEBUG
-    if(t.Name.Contains("GClass2103"))
+                if (t.Name.Contains("GClass2103"))
                 {
 
                 }
@@ -963,16 +963,16 @@ namespace SIT.Launcher.DeObfus
 
                 if (t.BaseType == null)
                     return;
-    
-                if(t.BaseType.Name.Contains("GClass") 
-                    || t.BaseType.Name.Contains("GStruct") 
-                    || t.BaseType.Name.Contains("GInterface") 
+
+                if (t.BaseType.Name.Contains("GClass")
+                    || t.BaseType.Name.Contains("GStruct")
+                    || t.BaseType.Name.Contains("GInterface")
                     || t.BaseType.Name.Contains("Class")
                     || t.BaseType.Name == "Object"
                     )
                     return;
-                
-                var n = 
+
+                var n =
                 // Key Value is Built like so. KEY.VALUE
                 t.Name
                 .Replace("[]", "")
@@ -981,8 +981,8 @@ namespace SIT.Launcher.DeObfus
                 .Replace("`3", "")
                 .Replace("&", "")
                 .Replace(" ", "")
-                + "." 
-                
+                + "."
+
                 + char.ToUpper(t.BaseType.Name[0]) + t.BaseType.Name.Substring(1)
 
                 // + (t.BaseType.Name.Contains("`1") ? "`1" : "") // cater for `1
@@ -992,7 +992,7 @@ namespace SIT.Launcher.DeObfus
                     gclassToNameCounts.Add(n, 0);
 
                 gclassToNameCounts[n]++;
-                 
+
             }
             catch { }
         }
@@ -1011,11 +1011,12 @@ namespace SIT.Launcher.DeObfus
                 if (t.Interfaces == null)
                     return;
 
-                foreach (var interf in t.Interfaces) {
+                foreach (var interf in t.Interfaces)
+                {
 
                     if (interf.InterfaceType.Name.Contains("GClass")
-                        || interf.InterfaceType.Name.Contains("GStruct") 
-                        || interf.InterfaceType.Name.Contains("GInterface") 
+                        || interf.InterfaceType.Name.Contains("GStruct")
+                        || interf.InterfaceType.Name.Contains("GInterface")
                         || interf.InterfaceType.Name.Contains("Class")
                         || interf.InterfaceType.Name.Contains("Disposable")
                         || interf.InterfaceType.Name.Contains("Enumerator")
@@ -1024,7 +1025,7 @@ namespace SIT.Launcher.DeObfus
                         || interf.InterfaceType.Name.Contains("Interface")
                         || interf.InterfaceType.Name.Contains("Equatable")
                         || interf.InterfaceType.Name.Contains("Exchangeable")
-                        ) 
+                        )
                         continue;
 
                     var n =
@@ -1278,7 +1279,7 @@ namespace SIT.Launcher.DeObfus
         public static TypeDefinition CreateStubOfOldType(TypeDefinition oldType)
         {
             var stubTypeDefinition = new TypeDefinition(oldType.Namespace, oldType.Name, oldType.Attributes);
-            foreach (var cons in oldType.GetConstructors()) 
+            foreach (var cons in oldType.GetConstructors())
             {
                 MethodDefinition methodDefinition = new MethodDefinition(cons.Name, cons.Attributes, cons.ReturnType);
                 foreach (var parameters in cons.Parameters)
@@ -1305,9 +1306,9 @@ namespace SIT.Launcher.DeObfus
         }
 
         internal static async Task<bool> DeobfuscateAsync(string exeLocation, bool createBackup = true, bool overwriteExisting = false, bool doRemapping = false, ILogger logger = null)
-		{
+        {
             NestedLogger = logger;
-			return await Task.Run(() => { return Deobfuscate(exeLocation, createBackup, overwriteExisting, doRemapping); });
-		}
-	}
+            return await Task.Run(() => { return Deobfuscate(exeLocation, createBackup, overwriteExisting, doRemapping); });
+        }
+    }
 }

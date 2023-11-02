@@ -32,7 +32,7 @@ namespace SIT.Launcher.Windows
                 Config = JsonConvert.DeserializeObject<LauncherConfig>(File.ReadAllText("LauncherConfig.json"));
             }
             this.DataContext = this;
-            
+
         }
 
         public LauncherConfig Config { get; } = LauncherConfig.Instance;

@@ -23,7 +23,7 @@ namespace SIT.Launcher
         public LoadingDialog()
         {
             InitializeComponent();
-                this.Visibility = Visibility.Collapsed;
+            this.Visibility = Visibility.Collapsed;
         }
 
         public void SetProgressBarMaximum(int maximum)
