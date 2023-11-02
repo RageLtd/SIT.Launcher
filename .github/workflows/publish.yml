@@ -37,11 +37,7 @@ jobs:
         
       - name: Package
         # zip up assets
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $publishPath = "${{ github.workspace }}\bin\${{ matrix.configuration }}\publish"
-          $zipPath = "${{ github.workspace }}\bin\${{ matrix.configuration }}\publish.zip"
-          Compress-Archive -Path $publishPath -DestinationPath $zipPath -Force
+        run: 7z a publish.zip .\bin\${{ matrix.configuration }}\publish\*.* -r -tzip
         
       - name: Upload Package for Publishing
         uses: actions/upload-artifact@v3
