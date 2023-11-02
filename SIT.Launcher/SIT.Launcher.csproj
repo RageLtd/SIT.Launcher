@@ -27,7 +27,6 @@
                 <DebugType>none</DebugType>
                 <Optimize>true</Optimize>
                 <DefineConstants>TRACE</DefineConstants>
-                <OutputPath>.\bin\Release\</OutputPath>
                 <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
             </PropertyGroup>
         </When>
