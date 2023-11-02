@@ -46,7 +46,7 @@ jobs:
         
       - name: Package
         # zip up assets
-        run: 7z a publish.zip ${{ github.workspace }}\bin\${{ matrix.configuration }}\win-x64\publish -r -tzip
+        run: 7z a publish.zip ${{ github.workspace }}\SIT.Launcher\bin\${{ matrix.configuration }}\win-x64\publish -r -tzip
         
       - name: Upload Package for Publishing
         uses: actions/upload-artifact@v3
