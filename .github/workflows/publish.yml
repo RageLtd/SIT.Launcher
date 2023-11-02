@@ -3,6 +3,9 @@ on:
   push:
     branches:  [ master ]
 
+env:
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
 jobs:
   release:
     name: .NET on ${{ matrix.runs-on }} (${{ matrix.configuration }})
@@ -20,6 +23,10 @@ jobs:
         
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
+        with:
+          cache: true
+          dotnet-version: 7.x
+          cache-dependency-path: "**/packages.lock.json"
 
       - name: Restore dependencies
         run: dotnet restore --locked-mode
