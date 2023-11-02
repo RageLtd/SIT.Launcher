@@ -14,10 +14,9 @@ jobs:
     name: .NET on ${{ matrix.runs-on }} (${{ matrix.configuration }})
     runs-on: ${{ matrix.runs-on }}
     strategy:
-      fail-fast: false
       matrix:
         runs-on: [windows-latest]
-        configuration: [Release,Debug]
+        configuration: [Release, Debug]
     steps:
       - uses: actions/checkout@v3
 
@@ -40,5 +39,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Rage-SIT-Build-${{ matrix.configuration }}
-          path: ${{ github.workspace }}\SIT.Launcher\bin\${{ matrix.configuration }}\**\*.*
+          path: ${{ github.workspace }}\SIT.Launcher\bin\${{ matrix.configuration }}\win-x64\publish
           if-no-files-found: error

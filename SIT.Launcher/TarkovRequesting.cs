@@ -1,5 +1,4 @@
-﻿//using ComponentAce.Compression.Libs.zlib;
-using ComponentAce.Compression.Libs.zlib;
+﻿using ComponentAce.Compression.Libs.zlib;
 using Octokit.Internal;
 using System;
 using System.Collections.Generic;
@@ -104,7 +103,7 @@ namespace SIT.Launcher
 
             if (method != "GET" && !string.IsNullOrEmpty(data))
             {
-                var bytes = (compress) ? SimpleZlib.CompressToBytes(data, zlibConst.Z_BEST_SPEED) : Encoding.UTF8.GetBytes(data);
+                var bytes = compress ? SimpleZlib.CompressToBytes(data, zlibConst.Z_BEST_SPEED) : Encoding.UTF8.GetBytes(data);
 
                 if (compress)
                 {
@@ -158,7 +157,7 @@ namespace SIT.Launcher
 
             if (method != "GET" && !string.IsNullOrEmpty(data))
             {
-                var bytes = (compress) ? SimpleZlib.CompressToBytes(data, zlibConst.Z_BEST_SPEED) : Encoding.UTF8.GetBytes(data);
+                var bytes = compress ? SimpleZlib.CompressToBytes(data, zlibConst.Z_BEST_SPEED) : Encoding.UTF8.GetBytes(data);
 
                 if (compress)
                 {
@@ -181,37 +180,29 @@ namespace SIT.Launcher
 
         public void PutJson(string url, string data, bool compress = true)
         {
-            using (Stream stream = Send(url, "PUT", data, compress)) { }
+            using Stream stream = Send(url, "PUT", data, compress);
         }
 
         public string GetJson(string url, bool compress = true)
         {
-            using (Stream stream = Send(url, "GET", null, compress))
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    if (stream == null)
-                        return "";
-                    stream.CopyTo(ms);
-                    //return Encoding.UTF8.GetString(DecompressFile(ms.ToArray()));
-                    return SimpleZlib.Decompress(ms.ToArray(), null);
-                }
-            }
+            using Stream stream = Send(url, "GET", null, compress);
+            using MemoryStream ms = new();
+            if (stream == null)
+                return "";
+            stream.CopyTo(ms);
+            //return Encoding.UTF8.GetString(DecompressFile(ms.ToArray()));
+            return SimpleZlib.Decompress(ms.ToArray(), null);
         }
 
         public string PostJson(string url, string data, bool compress = true)
         {
-            using (Stream stream = Send(url, "POST", data, compress))
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    if (stream == null)
-                        return "";
-                    stream.CopyTo(ms);
-                    //return Encoding.UTF8.GetString(DecompressFile(ms.ToArray()));
-                    return SimpleZlib.Decompress(ms.ToArray(), null);
-                }
-            }
+            using Stream stream = Send(url, "POST", data, compress);
+            using MemoryStream ms = new();
+            if (stream == null)
+                return "";
+            stream.CopyTo(ms);
+            //return Encoding.UTF8.GetString(DecompressFile(ms.ToArray()));
+            return SimpleZlib.Decompress(ms.ToArray(), null);
         }
 
         
