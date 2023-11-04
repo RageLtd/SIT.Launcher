@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Rage-SIT.Launcher-${{ steps.tag_version.outputs.new_tag }}
-          path: publish.zip
+          path: Rage-SIT.Launcher-${{ needs.release.outputs.new_version }}.zip
           if-no-files-found: error
           
   publish:
