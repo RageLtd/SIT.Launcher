@@ -11,7 +11,7 @@ jobs:
     name: .NET on ${{ matrix.runs-on }} (${{ matrix.configuration }})
     runs-on: ${{ matrix.runs-on }}
     outputs:
-      new_version: ${{ steps.tag_version.outputs.new_tag }}
+      new_tag: ${{ steps.tag_version.outputs.new_tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
     strategy:
       fail-fast: true
@@ -39,6 +39,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dry_run: true
+          release_branches: master
 
       - name: Build
         id: build
@@ -46,13 +47,13 @@ jobs:
         
       - name: Package
         # zip up assets
-        run: 7z a Rage-SIT.Launcher-${{ needs.release.outputs.new_version }}.zip ${{ github.workspace }}\SIT.Launcher\bin\${{ matrix.configuration }}\win-x64\publish -r -tzip
+        run: 7z a Rage-SIT.Launcher-${{ steps.tag_version.outputs.new_tag }}.zip ${{ github.workspace }}\SIT.Launcher\bin\${{ matrix.configuration }}\win-x64\publish -r -tzip
         
       - name: Upload Package for Publishing
         uses: actions/upload-artifact@v3
         with:
           name: Rage-SIT.Launcher-${{ steps.tag_version.outputs.new_tag }}
-          path: Rage-SIT.Launcher-${{ needs.release.outputs.new_version }}.zip
+          path: Rage-SIT.Launcher-${{ steps.tag_version.outputs.new_tag }}.zip
           if-no-files-found: error
           
   publish:
@@ -63,15 +64,15 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
-          name: Rage-SIT.Launcher-${{ needs.release.outputs.new_version }}
+          name: Rage-SIT.Launcher-${{ needs.release.outputs.new_tag }}
           
       - name: Publish to Github Releases
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ needs.release.outputs.new_version }}
-          artifacts: ${{ github.workspace }}\Rage-SIT.Launcher-${{ needs.release.outputs.new_version }}.zip
+          tag: ${{ needs.release.outputs.new_tag }}
+          artifacts: ${{ github.workspace }}\Rage-SIT.Launcher-${{ needs.release.outputs.new_tag }}.zip
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: Release ${{ needs.release.outputs.new_version }}
+          name: Release ${{ needs.release.outputs.new_tag }}
           body: ${{ needs.release.outputs.changelog }}
           prerelease: false
           draft: false
