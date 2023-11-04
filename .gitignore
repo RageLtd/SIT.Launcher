@@ -368,3 +368,4 @@ FodyWeavers.xsd
 
 # VSCode config
 .vscode/
+/compose-dev.yaml

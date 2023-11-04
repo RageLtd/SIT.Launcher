@@ -75,4 +75,4 @@ jobs:
           body: ${{ needs.release.outputs.changelog }}
           prerelease: false
           draft: false
-          overwrite: true
+          allowUpdates: true
