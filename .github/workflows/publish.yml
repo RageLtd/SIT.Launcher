@@ -11,7 +11,7 @@ jobs:
     name: .NET on ${{ matrix.runs-on }} (${{ matrix.configuration }})
     runs-on: ${{ matrix.runs-on }}
     outputs:
-      new_version: Rage-SIT.Launcher-${{ steps.tag_version.outputs.new_tag }}
+      new_version: ${{ steps.tag_version.outputs.new_tag }}
       changelog: ${{ steps.tag_version.outputs.changelog }}
     strategy:
       fail-fast: true
