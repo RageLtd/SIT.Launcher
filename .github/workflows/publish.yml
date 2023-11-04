@@ -63,7 +63,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
-          name: ${{ needs.release.outputs.new_version }}
+          name: Rage-SIT.Launcher-${{ needs.release.outputs.new_version }}
           
       - name: Publish to Github Releases
         uses: ncipollo/release-action@v1
