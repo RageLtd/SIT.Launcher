@@ -330,12 +330,14 @@ namespace SIT.Launcher
                 MessageBox.Show("Server Address is incorrect, you should NOT have a / at the end!");
                 return null;
             }
-            TarkovRequesting requesting = new TarkovRequesting(null, ServerAddress, false);
+            TarkovRequesting requesting = new(null, ServerAddress, false);
 
-            Dictionary<string, string> data = new Dictionary<string, string>();
-            data.Add("username", Username);
-            data.Add("email", Username);
-            data.Add("edition", "Edge Of Darkness"); // default to EoD
+            Dictionary<string, string> data = new()
+            {
+                { "username", Username },
+                { "email", Username },
+                { "edition", "Edge Of Darkness" } // default to EoD
+            };
             //data.Add("edition", "Standard");
             if (string.IsNullOrEmpty(TxtPassword.Password))
             {
@@ -372,7 +374,7 @@ namespace SIT.Launcher
 
                 return returnData;
             }
-            catch (System.Net.WebException webEx)
+            catch (WebException webEx)
             {
                 MessageBox.Show(webEx.Message, "Unable to communicate with the Server");
             }
@@ -538,7 +540,7 @@ namespace SIT.Launcher
             {
                 File.Delete(uninstallPath);
             }
-            var logsDirPath = System.IO.Path.Combine(Directory.GetParent(installLocation).FullName, "Logs");
+            var logsDirPath = Path.Combine(Directory.GetParent(installLocation).FullName, "Logs");
             if (Directory.Exists(logsDirPath))
             {
                 Directory.Delete(logsDirPath, true);
@@ -548,11 +550,11 @@ namespace SIT.Launcher
         private bool DoesBepInExExistInInstall(string exeLocation)
         {
             var baseGamePath = Directory.GetParent(exeLocation).FullName;
-            var bepinexPath = System.IO.Path.Combine(exeLocation.Replace("EscapeFromTarkov.exe", "BepInEx"));
+            var bepinexPath = Path.Combine(exeLocation.Replace("EscapeFromTarkov.exe", "BepInEx"));
             var bepinexWinHttpDLL = exeLocation.Replace("EscapeFromTarkov.exe", "winhttp.dll");
 
-            var bepinexCorePath = System.IO.Path.Combine(bepinexPath, "core");
-            var bepinexPluginsPath = System.IO.Path.Combine(bepinexPath, "plugins");
+            var bepinexCorePath = Path.Combine(bepinexPath, "core");
+            var bepinexPluginsPath = Path.Combine(bepinexPath, "plugins");
 
             return (Directory.Exists(bepinexCorePath) && Directory.Exists(bepinexPluginsPath) && File.Exists(bepinexWinHttpDLL));
         }
@@ -562,11 +564,11 @@ namespace SIT.Launcher
             try
             {
                 var baseGamePath = Directory.GetParent(exeLocation).FullName;
-                var bepinexPath = System.IO.Path.Combine(exeLocation.Replace("EscapeFromTarkov.exe", "BepInEx"));
+                var bepinexPath = Path.Combine(exeLocation.Replace("EscapeFromTarkov.exe", "BepInEx"));
                 var bepinexWinHttpDLL = exeLocation.Replace("EscapeFromTarkov.exe", "winhttp.dll");
 
-                var bepinexCorePath = System.IO.Path.Combine(bepinexPath, "core");
-                var bepinexPluginsPath = System.IO.Path.Combine(bepinexPath, "plugins");
+                var bepinexCorePath = Path.Combine(bepinexPath, "core");
+                var bepinexPluginsPath = Path.Combine(bepinexPath, "plugins");
 
                 var savedBepinexZipPath = App.ApplicationDirectory + "\\BepInEx5.4.22.zip";
 
@@ -661,26 +663,13 @@ namespace SIT.Launcher
 
             try
             {
-
-                //var github = new GitHubClient(new ProductHeaderValue("SIT-Launcher"));
-                //var user = await github.User.Get("paulov-t");
-                //var tarkovCoreReleases = await github.Repository.Release.GetAll("paulov-t", "SIT.Core", new ApiOptions() { });
-                //var tarkovCoreReleasesOrdered = tarkovCoreReleases.OrderByDescending(x => x.CreatedAt).ToList();
-                // Release latestCore = SelectedSITRelease;
-                //if ((Config.AutomaticallyInstallSITPreRelease || Config.ForceInstallLatestSIT) && tarkovCoreReleasesOrdered[0].Prerelease)
-                //    latestCore = tarkovCoreReleasesOrdered[0];
                 var github = new GitHubClient(new ProductHeaderValue("SIT-Launcher"));
-                var user = await github.User.Get("paulov-t");
-                var tarkovCoreReleases = await github.Repository.Release.GetAll("paulov-t", "SIT.Core", new ApiOptions() { });
+                var user = await github.User.Get("RageLtd");
+                var tarkovCoreReleases = await github.Repository.Release.GetAll("RageLtd", "SIT.Core", new ApiOptions() { });
                 var tarkovCoreReleasesOrdered = tarkovCoreReleases.OrderByDescending(x => x.CreatedAt).ToList();
                 Release latestCore = null;
-                if ((Config.AutomaticallyInstallSITPreRelease || Config.ForceInstallLatestSIT) && tarkovCoreReleasesOrdered[0].Prerelease)
-                    latestCore = tarkovCoreReleasesOrdered[0];
 
-                //if (latestCore == null)
-                //    latestCore = tarkovCoreReleasesOrdered.First(x => !x.Prerelease);
-                if (latestCore == null)
-                    latestCore = tarkovCoreReleasesOrdered.First(x => !x.Prerelease);
+                latestCore ??= tarkovCoreReleasesOrdered.First(x => !x.Prerelease);
 
                 var clientModsDeliveryPath = Path.Combine(App.ApplicationDirectory, "ClientMods");
                 Directory.CreateDirectory(clientModsDeliveryPath);
@@ -707,8 +696,10 @@ namespace SIT.Launcher
                 var allAssetsCount = allAssets.Count();
                 var assetIndex = 0;
 
-                var httpClient = new HttpClient();
-                httpClient.Timeout = new TimeSpan(0, 5, 0);
+                var httpClient = new HttpClient
+                {
+                    Timeout = new TimeSpan(0, 5, 0)
+                };
 
                 foreach (var asset in allAssets)
                 {
@@ -786,20 +777,19 @@ namespace SIT.Launcher
 
         private string GetBepInExPath(string exeLocation)
         {
-            var baseGamePath = Directory.GetParent(exeLocation).FullName;
-            var bepinexPath = System.IO.Path.Combine(exeLocation.Replace("EscapeFromTarkov.exe", "BepInEx"));
+            var bepinexPath = Path.Combine(exeLocation.Replace("EscapeFromTarkov.exe", "BepInEx"));
             return bepinexPath;
         }
 
         private string GetBepInExPluginsPath(string exeLocation)
         {
-            var bepinexPluginsPath = System.IO.Path.Combine(GetBepInExPath(exeLocation), "plugins");
+            var bepinexPluginsPath = Path.Combine(GetBepInExPath(exeLocation), "plugins");
             return bepinexPluginsPath;
         }
 
         private string GetBepInExPatchersPath(string exeLocation)
         {
-            var bepinexPluginsPath = System.IO.Path.Combine(GetBepInExPath(exeLocation), "patchers");
+            var bepinexPluginsPath = Path.Combine(GetBepInExPath(exeLocation), "patchers");
             return bepinexPluginsPath;
         }
 
@@ -834,7 +824,7 @@ namespace SIT.Launcher
                     List<FileInfo> fiAkiManagedFiles = Directory.GetFiles(sitLauncherAkiSupportManagedPath).Select(x => new FileInfo(x)).ToList();
                     foreach (var fileInfo in fiAkiManagedFiles)
                     {
-                        var path = System.IO.Path.Combine(managedPath, fileInfo.Name);
+                        var path = Path.Combine(managedPath, fileInfo.Name);
 
                         // DO NOT OVERWRITE IF NEWER VERSION OF AKI EXISTS IN DIRECTORY
                         var existingFI = new FileInfo(path);
@@ -861,7 +851,7 @@ namespace SIT.Launcher
                     // Install any compatible Plugins from SIT Launcher
                     foreach (var fileInfo in fiAkiBepinexPluginsFiles)
                     {
-                        var existingPath = System.IO.Path.Combine(bepinexPluginsPath, fileInfo.Name);
+                        var existingPath = Path.Combine(bepinexPluginsPath, fileInfo.Name);
 
                         // DO NOT OVERWRITE IF NEWER VERSION OF AKI EXISTS IN DIRECTORY
                         var existingFI = new FileInfo(existingPath);
@@ -880,7 +870,7 @@ namespace SIT.Launcher
                     foreach (var fileInfo in fiAkiBepinexPatchersFiles)
                     {
                         //var existingPath = System.IO.Path.Combine(bepinexPatchersPath, fileInfo.Name); // Patcher is causing problems
-                        var existingPath = System.IO.Path.Combine(bepinexPluginsPath, fileInfo.Name);
+                        var existingPath = Path.Combine(bepinexPluginsPath, fileInfo.Name);
 
                         // DO NOT OVERWRITE IF NEWER VERSION OF AKI EXISTS IN DIRECTORY
                         var existingFI = new FileInfo(existingPath);
@@ -903,10 +893,6 @@ namespace SIT.Launcher
 
         private void OnDeobfuscateLog(string s)
         {
-            //Dispatcher.Invoke(() =>
-            //{
-            //    txtDeobfuscateLog.Text += s + Environment.NewLine;
-            //});
             Log(s);
         }
 
@@ -915,12 +901,12 @@ namespace SIT.Launcher
             Deobfuscator.Logged.Clear();
             await Dispatcher.InvokeAsync(() =>
             {
-                txtDeobfuscateLog.Text = String.Empty;
+                txtDeobfuscateLog.Text = string.Empty;
             });
             //Deobfuscator.OnLog += OnDeobfuscateLog;
             await Dispatcher.InvokeAsync(() =>
             {
-                txtDeobfuscateLog.Text = String.Empty;
+                txtDeobfuscateLog.Text = string.Empty;
                 OnDeobfuscateLog("--------------------------------------------------------------------------");
                 OnDeobfuscateLog("Deobfuscate started!" + Environment.NewLine);
                 btnDeobfuscate.IsEnabled = false;
@@ -989,12 +975,6 @@ namespace SIT.Launcher
 
         }
 
-        //private void btnCoopServer_Click(object sender, RoutedEventArgs e)
-        //{
-        //    CollapseAll();
-        //    //gridCoopServer.Visibility = Visibility.Visible;
-        //}
-
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
             CollapseAll();
@@ -1057,7 +1037,7 @@ namespace SIT.Launcher
 
         private void btnServerCommand_Click(object sender, RoutedEventArgs e)
         {
-            FolderBrowserEx.FolderBrowserDialog folderBrowserDialog = new FolderBrowserEx.FolderBrowserDialog();
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserEx.FolderBrowserDialog();
             if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 Process p = new Process();
@@ -1070,15 +1050,6 @@ namespace SIT.Launcher
                 p.OutputDataReceived += process_OutputDataReceived;
                 p.Start();
                 p.WaitForExit();
-
-
-                //p.StartInfo.FileName = @"c:\node\node.exe"; //Path to node installed folder****
-                //string argument = @"\\ bundle\main.js";
-                //p.StartInfo.Arguments = @argument;
-                //p.Start();
-
-                //Process.Start("CMD.exe", @"/C npm i");
-                //Process.Start("CMD.exe", @"/C npm run run:server");
 
             }
         }

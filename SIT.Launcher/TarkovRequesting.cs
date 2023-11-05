@@ -33,42 +33,6 @@ namespace SIT.Launcher
             httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "deflate");
             httpClient.Timeout = new TimeSpan(0, 0, 1);
         }
-
-        //private static byte[] CompressFile(Stream stream)
-        //{
-        //    MemoryStream ms = new MemoryStream();
-        //    GZipStream deflateStream;
-        //    using (deflateStream = new GZipStream(ms, CompressionMode.Compress))
-        //    {
-        //        stream.CopyTo(deflateStream);
-        //    }
-        //    return ms.ToArray();
-        //}
-
-        //private static byte[] DecompressFile(byte[] bytes)
-        //{
-        //    var str = UTF8Encoding.UTF8.GetString(bytes);
-
-        //    var destination = new MemoryStream();
-        //    var instream = new MemoryStream(bytes);
-        //    using (var decompressor = (Stream)new DeflateStream(instream, CompressionMode.Decompress, true))
-        //    {
-        //        decompressor.CopyTo(destination);
-        //    }
-
-        //    destination.Seek(0, SeekOrigin.Begin);
-
-        //    return destination.ToArray();
-        //}
-
-        //private static void DecompressFile()
-        //{
-        //    using FileStream compressedFileStream = File.Open(CompressedFileName, FileMode.Open);
-        //    using FileStream outputFileStream = File.Create(DecompressedFileName);
-        //    using var decompressor = new DeflateStream(compressedFileStream, CompressionMode.Decompress);
-        //    decompressor.CopyTo(outputFileStream);
-        //}
-
         /// <summary>
         /// Send request to the server and get Stream of data back
         /// </summary>
@@ -105,17 +69,15 @@ namespace SIT.Launcher
             {
                 var bytes = compress ? SimpleZlib.CompressToBytes(data, zlibConst.Z_BEST_SPEED) : Encoding.UTF8.GetBytes(data);
 
-                if (compress)
-                {
-                    request.Headers.Add("content-encoding", "deflate");
-                }
-
-                using (var stream = new StreamContent(new MemoryStream(bytes)))
-                {
-                    request.Content = stream;
-                }
+                var stream = new StreamContent(new MemoryStream(bytes));
+                request.Content = stream;
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 request.Content.Headers.ContentLength = bytes.Length;
+
+                if (compress)
+                {
+                    request.Content.Headers.Add("content-encoding", "deflate");
+                }
             }
 
             // Send request
@@ -159,17 +121,15 @@ namespace SIT.Launcher
             {
                 var bytes = compress ? SimpleZlib.CompressToBytes(data, zlibConst.Z_BEST_SPEED) : Encoding.UTF8.GetBytes(data);
 
-                if (compress)
-                {
-                    request.Headers.Add("content-encoding", "deflate");
-                }
-
-                using (var stream = new StreamContent(new MemoryStream(bytes)))
-                {
-                    request.Content = stream;
-                }
+                var stream = new StreamContent(new MemoryStream(bytes));
+                request.Content = stream;
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 request.Content.Headers.ContentLength = bytes.Length;
+
+                if (compress)
+                {
+                    request.Content.Headers.Add("content-encoding", "deflate");
+                }
             }
 
             // Send Request
