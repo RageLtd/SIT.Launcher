@@ -59,21 +59,24 @@ namespace SIT.Launcher
 
         private static LauncherConfig Load()
         {
-            LauncherConfig launcherConfig = new LauncherConfig()
-            {
-                AutomaticallyDeobfuscateDlls = true,
-                AutomaticallyInstallAssemblyDlls = true,
-                AutomaticallyInstallSIT = true,
-                AutomaticallyInstallAkiSupport = true,
-                CloseLauncherAfterLaunch = false,
-                ServerInstance = new ServerInstance() { ServerAddress = "http://127.0.0.1:6969", WebsocketUrl = string.Empty }
-            };
+            LauncherConfig launcherConfig;
+
             if (File.Exists(App.ApplicationDirectory + "LauncherConfig.json"))
                 launcherConfig = JsonConvert.DeserializeObject<LauncherConfig>(File.ReadAllText(App.ApplicationDirectory + "LauncherConfig.json"));
+            else
+                launcherConfig = new LauncherConfig()
+                {
+                    AutomaticallyDeobfuscateDlls = true,
+                    AutomaticallyInstallAssemblyDlls = true,
+                    AutomaticallyInstallSIT = true,
+                    AutomaticallyInstallAkiSupport = true,
+                    CloseLauncherAfterLaunch = false,
+                    ServerInstance = new ServerInstance() { ServerAddress = "http://127.0.0.1:6969", WebsocketUrl = "http://127.0.0.1:6970" }
+                };
 
             if (launcherConfig.ServerInstance.ServerAddress.EndsWith("/"))
             {
-                launcherConfig.ServerInstance.ServerAddress = launcherConfig.ServerInstance.ServerAddress.Substring(0, launcherConfig.ServerInstance.ServerAddress.Length - 1);
+                launcherConfig.ServerInstance.ServerAddress = launcherConfig.ServerInstance.ServerAddress[..^1];
             }
             return launcherConfig;
         }

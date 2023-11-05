@@ -494,21 +494,12 @@ namespace SIT.Launcher
 
             UpdateButtonText(null);
             btnLaunchGame.IsEnabled = true;
-            var commandArgs = $"-token={sessionId} -config={{\"BackendUrl\":\"{ServerAddress}\",\"WebsocketUrl\":{WebsocketUrl}\",\"Version\":\"live\"}}";
+            var commandArgs = $"-token={sessionId} -config={{\"BackendUrl\":\"{ServerAddress}\",\"WebsocketUrl\":\"{WebsocketUrl}\",\"Version\":\"live\"}}";
             Process.Start(installLocation, commandArgs);
             Config.Save();
             WindowState = WindowState.Minimized;
 
             await Task.Delay(10000);
-
-            //if (Config.SendInfoToDiscord)
-            //    DiscordInterop.DiscordRpcClient.UpdateDetails("In Game");
-            ////do
-            ////{
-
-            ////} while (Process.GetProcessesByName("EscapeFromTarkov") != null);
-            //if (Config.SendInfoToDiscord)
-            //    DiscordInterop.DiscordRpcClient.UpdateDetails("");
         }
 
         private void CleanupDirectory(string installLocation)
