@@ -73,11 +73,6 @@ namespace SIT.Launcher
                 request.Content = stream;
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 request.Content.Headers.ContentLength = bytes.Length;
-
-                if (compress)
-                {
-                    request.Content.Headers.Add("content-encoding", "deflate");
-                }
             }
 
             // Send request
@@ -125,11 +120,6 @@ namespace SIT.Launcher
                 request.Content = stream;
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 request.Content.Headers.ContentLength = bytes.Length;
-
-                if (compress)
-                {
-                    request.Content.Headers.Add("content-encoding", "deflate");
-                }
             }
 
             // Send Request
